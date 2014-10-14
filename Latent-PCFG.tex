@@ -1,0 +1,154 @@
+\documentclass[english]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{babel}
+\usepackage{verbatim}
+\usepackage[authoryear]{natbib}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+
+\makeatletter
+
+\usepackage{hyperref}
+
+\RequirePackage{colortbl, tabularx}
+
+% Just a little trick to make comments visible for the draft version.
+\@ifundefined{comment}{}% do nothing if the comment environment is not defined
+  {% redefine the comment environment if it is defined
+   \renewenvironment{comment}
+    {% replaces \begin{comment}
+     \par\medskip\noindent
+     \tabularx{\textwidth}{|>{\columncolor[gray]{0.9}}X|}
+     \hline
+     \emph{\textbf{Comment:}}% You can use any other text instead of "Comment:" or leave it
+    }
+    {% replaces \end{comment}
+     \endtabularx\hrule\par\medskip
+    }
+  }%
+
+\makeatother
+
+\begin{document}
+
+\title{Challenge Problem 5 DRAFT:\\
+Probabilistic Context-Free Grammars with Latent Annotation}
+
+\date{\today}
+
+\maketitle
+\tableofcontents{}
+
+\begin{comment}
+[Chad] I've included a detailed TOC, mostly to make editing easier. For the final cut we'll probably want less detail here (10 TOC entries over 3 pages is a bit silly).
+\end{comment}
+
+\section{Problem summary}
+
+The goal of this challenge problem is to train a probabilistic grammar model on a treebank, and to use the result to answer some basic queries. The model and the training data will both be staged, increasing in complexity over several rounds of problem submissions.
+
+The probability model will begin with a probabilistic context-free grammar (PCFG), as already encountered in Challenge Problem 4. This previous challenge problem provided a trained PCFG as a starting point. In this round, by contrast, teams will need to train the PCFG parameters (production rules and associated conditional probabilities) from the data. 
+
+Following this initial round, teams will extend the basic PCFG model to the latent annotation model of \citet{Matsuzaki2005}
+
+Training data consists of a text corpus with associated constituency-based parse trees (\emph{i.e.}, one terminal associated with each nonterminal leaf node)
+
+A good introduction to the field that only assumes general statistical modeling expertise can be found in the introduction section of \citet{Liang2009}.
+
+
+\section{Probability model}
+
+\subsection{July 2015: Probabilistic Context-Free Grammar}
+
+
+
+\subsection{January 2016: PCFG with latent annotations}
+
+The PCFG-LA model is an extension of PCFG in which each nonterminal is assumed to have a latent annotation. Thus, a particular node in the training data might be labeled as N (noun), but the model assumes this is realized an instance of one of N$_{1}$ through N$_{K}$ for some fixed $K$. After training the model, these latent subcategories are often seen to form clusters with some semantic interpretation. For example, N$_{1}$ might consist primarily of proper names of places, while N$_{2}$ might consist of types of animals.
+
+Details of the model definition can be found in \citet{Matsuzaki2005}, and an excellent brief overview has been produced by \citet{Manning2012}.
+
+The PCFG-LA model can be trained using the EM algorithm, but this depends strongly on initialization due to local optima in the posterior density. Matsuzaki et al handle initialization by providing annotations of the identity of the parent and sibling. 
+
+\citet{Petrov2006} instead starts with a minimal grammar, and extends using a split/merge heuristic.
+
+In order to ensure tractability, we plan to limit the number of latent annotation categories, and to begin with a ``warm-up'' problem of fitting a vanilla PCFG. This will also aid in qualitative analysis, since the nature of PCFG-LA as an extension of PCFG should be reflected in the source code.
+
+\subsubsection*{Prediction}
+In this context, the prediction problem is to assign a given sentence a parse tree (or distribution over parse trees, using a fully Bayesian approach). Unfortunately, as Matsuzaki et al point out, the problem of optimizing the posterior density of a PCFG-LA model is NP-hard. Matsuzaki and Petrov thus both rely on heuristics for this computation.
+
+
+\subsection{July 2016: Hierarchical Dirichlet Process PCFG}
+
+\section{Training and test data}
+
+For training and test data, we plan to use Ontonotes 5.0, which is freely available from \citet{LDC2013}. From LDC's description: 
+\begin{quote}
+The goal of the project was to annotate a large corpus comprising various genres of text (news, conversational telephone speech, weblogs, usenet newsgroups, broadcast, talk shows) in three languages (English, Chinese, and Arabic) with structural information (syntax and predicate argument structure) and shallow semantics (word sense linked to an ontology and coreference).
+\end{quote}
+\begin{comment}
+The OntoNotes license restricts against redistribution. We'll want to make the corpus available on MIDAS, so we need to be sure this wouldn't constitute a violation.
+\end{comment}
+
+
+The English portion of OntoNotes consists of 1.4 million words from a variety of sources (News, BN, BC, Web, Tele, and Pivot).
+
+The directory \texttt{ontonotes-release-5.0/data/files/data/english/annotations/nw/wsj} contains directories 00 through 24. Within each of these directories you'll find (among other files) some files with names of the form \texttt{wsj\_*.parse}. These \texttt{.parse} files contain the parse trees. 
+
+Petrov describes the ``standard setup'' for evaluation:
+\begin{quote}
+We ran our experiments on the Wall Street Journal (WSJ) portion of the Penn Treebank using the standard setup: we trained on sections 2 to 21, and we used section 1 as a validation set for tuning model hyperparameters. Section 22 was used as development set for intermediate results. All of section 23 was reserved for the final test. We used the EVALB parseval reference implementation, available from Sekine and Collins (1997), for scoring. All reported development set results are averages over four runs. For the final test we selected the grammar that performed best on the development set.
+\end{quote}
+\begin{comment}
+I (Chad) see a lot of discussion of \emph{binarization} as a necessary step in this kind of analysis. This refers to the number of children a given nonterminal may have in the tree. It's not yet clear to me whether it would make sense for us to binarize the parse tree as preprocessing in order to make the problem more tractable.
+\end{comment}
+
+
+
+\section{Assessment}
+
+
+\subsection{Parsing performance}
+
+Parsing performance will be determined using the $F_{1}$ metric. 
+
+In the context of parsing, \emph{precision} is defined as the proportion of predicted nodes (over all levels of the parse tree) that are also correctly parsed, and \emph{recall} is the proportion of true nodes that are correctly parsed. $F_{1}$ is then computed as the harmonic mean of precision and recall.
+
+An overview of the $F_{1}$ metric is given by \citet{Manning2012a}.
+
+$F_{1}$ is measured by the Evalb program of \citet{Sekine1997}.
+
+\begin{comment}
+Evalb seems to be the standard way of evaluating parsers. We need to understand its input and output formats to be sure we request something compatible from the teams and so the result can be easily scripted.
+\end{comment}
+
+
+
+\section{Reference implementations}
+
+\begin{comment}
+The following are implementations of Slav Petrov's split/merge algorithm. Is this what we want to be comparing to? 
+\end{comment}
+
+
+Slav Petrov's original implementation: \\
+\url{https://code.google.com/p/berkeleyparser/downloads}
+
+University of Maryland re-implementation: \\
+\url{https://code.google.com/p/umd-featured-parser/}
+
+University of Dublin re-implementation: \\
+\url{http://www.cngl.ie/open-source-release-of-lorg-natural-language-parser/}
+
+\bibliographystyle{plainnat}
+\phantomsection\addcontentsline{toc}{section}{\refname}\bibliography{Latent-PCFG}
+
+\end{document}
