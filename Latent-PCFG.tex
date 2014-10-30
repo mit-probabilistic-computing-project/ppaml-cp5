@@ -42,14 +42,12 @@
 \title{Challenge Problem 5 DRAFT:\\
 Probabilistic Context-Free Grammars with Latent Annotation}
 
+\author{Chad Scherrer}
+
 \date{\today}
 
 \maketitle
-\tableofcontents{}
-
-\begin{comment}
-[Chad] I've included a detailed TOC, mostly to make editing easier. For the final cut we'll probably want less detail here (10 TOC entries over 3 pages is a bit silly).
-\end{comment}
+% \tableofcontents{}
 
 \section{Problem summary}
 
@@ -57,18 +55,23 @@ The goal of this challenge problem is to train a probabilistic grammar model on 
 
 The probability model will begin with a probabilistic context-free grammar (PCFG), as already encountered in Challenge Problem 4. This previous challenge problem provided a trained PCFG as a starting point. In this round, by contrast, teams will need to train the PCFG parameters (production rules and associated conditional probabilities) from the data. 
 
-Following this initial round, teams will extend the basic PCFG model to the latent annotation model of \citet{Matsuzaki2005}
+Following this initial round, teams will extend the basic PCFG model to the latent annotation model introduced by\citet{Matsuzaki2005}, and finally to Hierarchical Dirichlet Process PCFG of \citet{Liang2007}.
 
 Training data consists of a text corpus with associated constituency-based parse trees (\emph{i.e.}, one terminal associated with each nonterminal leaf node)
 
 A good introduction to the field that only assumes general statistical modeling expertise can be found in the introduction section of \citet{Liang2009}.
 
-
 \section{Probability model}
+
+This challenge problem requires teams to express three different models, which will be introduced in a staged approach -- a new model at each of three consecutive evaluation periods. The models are strongly related, and of increasing complexity. This will allow the source code of the three models to be compared; the similarity across models should be reflected in similarity across implementations for a given language.
 
 \subsection{July 2015: Probabilistic Context-Free Grammar}
 
+The initial model considered for this challenge problem is that of a probabilisitic context-free grammar (PCFG). This model is most commonly trained using the \emph{inside-outside algorithm}. Once the production probabilities are estimated, parsing is usually performed using the \emph{CYK algorithm}. 
 
+\begin{comment}
+(Chad) Need references for inside-outside and CYK
+\end{comment}
 
 \subsection{January 2016: PCFG with latent annotations}
 
@@ -78,15 +81,18 @@ Details of the model definition can be found in \citet{Matsuzaki2005}, and an ex
 
 The PCFG-LA model can be trained using the EM algorithm, but this depends strongly on initialization due to local optima in the posterior density. Matsuzaki et al handle initialization by providing annotations of the identity of the parent and sibling. 
 
-\citet{Petrov2006} instead starts with a minimal grammar, and extends using a split/merge heuristic.
-
-In order to ensure tractability, we plan to limit the number of latent annotation categories, and to begin with a ``warm-up'' problem of fitting a vanilla PCFG. This will also aid in qualitative analysis, since the nature of PCFG-LA as an extension of PCFG should be reflected in the source code.
+\citet{Petrov2006} instead starts with a minimal grammar, and extends using a split/merge heuristic. 
 
 \subsubsection*{Prediction}
-In this context, the prediction problem is to assign a given sentence a parse tree (or distribution over parse trees, using a fully Bayesian approach). Unfortunately, as Matsuzaki et al point out, the problem of optimizing the posterior density of a PCFG-LA model is NP-hard. Matsuzaki and Petrov thus both rely on heuristics for this computation.
+
+In this context, the prediction problem is to assign a given sentence a parse tree (or distribution over parse trees, using a fully Bayesian approach). Unfortunately, as Matsuzaki et al point out, the problem of optimizing the posterior density of a PCFG-LA model is NP-hard. Matsuzaki and Petrov thus both rely on heuristics for this computation; see the respective publications for details.
 
 
 \subsection{July 2016: Hierarchical Dirichlet Process PCFG}
+
+The final stage for this challenge problem is a ``stretch'' goal. It will not be a formal requirement, but Galois will still evaluate implementations that are made available.
+
+The Hierarchical Dirichlet Process PCFG is related to the latent annotation model, with the finite mixture of annotations replaced with a Dirichlet process. For details, see \citet{Liang2007} or \citet{Liang2009}.
 
 \section{Training and test data}
 
@@ -94,9 +100,7 @@ For training and test data, we plan to use Ontonotes 5.0, which is freely availa
 \begin{quote}
 The goal of the project was to annotate a large corpus comprising various genres of text (news, conversational telephone speech, weblogs, usenet newsgroups, broadcast, talk shows) in three languages (English, Chinese, and Arabic) with structural information (syntax and predicate argument structure) and shallow semantics (word sense linked to an ontology and coreference).
 \end{quote}
-\begin{comment}
-The OntoNotes license restricts against redistribution. We'll want to make the corpus available on MIDAS, so we need to be sure this wouldn't constitute a violation.
-\end{comment}
+
 
 
 The English portion of OntoNotes consists of 1.4 million words from a variety of sources (News, BN, BC, Web, Tele, and Pivot).
@@ -113,40 +117,18 @@ I (Chad) see a lot of discussion of \emph{binarization} as a necessary step in t
 
 
 
-\section{Assessment}
+\section{Evaluation}
 
 
-\subsection{Parsing performance}
+\subsection{Quantitative evaluation}
 
-Parsing performance will be determined using the $F_{1}$ metric. 
+In the context of parsing, \emph{precision} is defined as the proportion of predicted nodes (over all levels of the parse tree) that are also correctly parsed, and \emph{recall} is the proportion of true nodes that are correctly parsed. The $F_{1}$ metric is then computed as the harmonic mean of precision and recall.
 
-In the context of parsing, \emph{precision} is defined as the proportion of predicted nodes (over all levels of the parse tree) that are also correctly parsed, and \emph{recall} is the proportion of true nodes that are correctly parsed. $F_{1}$ is then computed as the harmonic mean of precision and recall.
+An overview of the $F_{1}$ metric is given by \citet{Manning2012a}, and can easily be computed using the Evalb program of \citet{Sekine1997}.
 
-An overview of the $F_{1}$ metric is given by \citet{Manning2012a}.
+\subsection{Qualitative evaluation}
 
-$F_{1}$ is measured by the Evalb program of \citet{Sekine1997}.
-
-\begin{comment}
-Evalb seems to be the standard way of evaluating parsers. We need to understand its input and output formats to be sure we request something compatible from the teams and so the result can be easily scripted.
-\end{comment}
-
-
-
-\section{Reference implementations}
-
-\begin{comment}
-The following are implementations of Slav Petrov's split/merge algorithm. Is this what we want to be comparing to? 
-\end{comment}
-
-
-Slav Petrov's original implementation: \\
-\url{https://code.google.com/p/berkeleyparser/downloads}
-
-University of Maryland re-implementation: \\
-\url{https://code.google.com/p/umd-featured-parser/}
-
-University of Dublin re-implementation: \\
-\url{http://www.cngl.ie/open-source-release-of-lorg-natural-language-parser/}
+In addition to the usual considerations, a \texttt{diff} of the PCFG and PCFG-LA submissions should reveal strong similarities, with modifications in the code corresponding as closely as possible to the conceptual modification to the model. 
 
 \bibliographystyle{plainnat}
 \phantomsection\addcontentsline{toc}{section}{\refname}\bibliography{Latent-PCFG}
