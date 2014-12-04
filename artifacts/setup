@@ -1,0 +1,8 @@
+#!/bin/bash
+
+svn checkout http://berkeleyparser.googlecode.com/svn
+
+wget http://nlp.cs.nyu.edu/evalb/EVALB.tgz
+tar xzf EVALB.tgz
+rm EVALB.tgz
+
