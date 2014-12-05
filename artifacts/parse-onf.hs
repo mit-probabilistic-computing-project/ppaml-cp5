@@ -12,10 +12,12 @@ import Data.Text.IO (hGetContents, putStr, putStrLn)
 import Data.Text (unlines, unwords, pack, Text)
 import Prelude hiding (unlines, takeWhile, putStr, putStrLn, unwords)
 
+onf :: Section -> Parser Text
 onf section = do
   xs <- liftM rights . many1' $ eitherP coreference (entry section)
   return $ unlines xs
 
+coreference :: Parser ()
 coreference = do
   many1' $ char '='
   newlines
@@ -26,6 +28,8 @@ data Section
   | Treebank
   | Tree 
   | Leaves
+
+entry :: Section -> Parser Text
 
 entry Plain = do
   sep
@@ -59,10 +63,13 @@ entry Leaves = do
   x <- leaves
   return x
 
+sep :: Parser ()
 sep = do
   many1' $ char '-'
   newlines
+  return ()
 
+skipHeader :: Text -> Parser ()
 skipHeader h = do
   string h
   restOfLine 
@@ -71,6 +78,7 @@ skipHeader h = do
   newlines
   return ()
 
+withHeader :: Text -> Parser Text
 withHeader h = do
   string h
   restOfLine 
@@ -79,11 +87,13 @@ withHeader h = do
   newlines
   return v
 
+value :: Parser Text
 value = do
   xs <- many' indented
   newlines
   return $ unwords xs
 
+indented :: Parser Text
 indented = do
   many1' space
   restOfLine
