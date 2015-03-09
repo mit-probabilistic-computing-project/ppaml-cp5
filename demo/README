@@ -1,0 +1,17 @@
+This demo shows how to evaluate a grammar using the Berkeley Parser and EVALB.
+
+You need to download wsj_test.22.txt and wsj_gold.22.txt.
+If you don't have a learned grammar in text format (.grammar, .lexicon, .states), you'll also need to download a grammar object output by the Berkeley Parser.
+EVALB can be downloaded here: http://nlp.cs.nyu.edu/evalb/.
+You may need to compile it after downloading.
+
+You may need to change the path in the Makefile.
+
+### Instructions ###
+
+- `make test`: 
+   (Optional: generate .grammar, .lexicon, .states from a Berkeley grammar object.)
+   Dump a grammar object by reading .grammar, .lexicon and .states files.
+   Run Berkeley parser on the dev set.
+   Evaluate the result by EVALB.
+

@@ -1,0 +1,26 @@
+Annotated terminals must be in the folowing format:
+<original tag>_<annotated state>
+The annotated states must be numbered from 0.
+Example:
+@NP^g_4
+
+The output grammar must consist of three files with the following suffix.
+
+.grammar:
+Grammar rules (binary and unary) and their probabilities.
+<parent> -> <left child> <right child> <probability>
+Example:
+@NP^g_0 -> -LRB-_0 DT_5 2.7901577260037124E-8
+
+.lexicon:
+Probabilities of generating each word.
+<annotated tag> -> <word> <probability>
+Example:
+SYM_0 & 0.09090909090909097
+
+.states:
+Number of annotated states for each tag.
+Must starts from zero and indexed by consecutive integers.
+<original tag> <number of states>
+Example:
+S^g   23 true
