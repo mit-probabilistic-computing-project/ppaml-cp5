@@ -23,6 +23,9 @@ $(grammar).gr:
 	@exit 1
 
 evalb:
+	@output=$$($(evalb) 2>&1); \
+	normal="Can't open gold file ((null))"; \
+	if [[ $$output != $$normal ]]; then echo "Please compile evalb manually."; exit 1; fi
 
 $(grammar).gr.grammar: $(grammar).gr
 	java -cp $(jarfile) edu.berkeley.nlp.PCFGLA.WriteGrammar -gr $(grammar).gr
