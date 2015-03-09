@@ -23,8 +23,7 @@ $(grammar).gr:
 	@exit 1
 
 evalb:
-	@if [ ! -e $(evalb) ]; then echo "$(evalb) does not exist. You need to download EVALB."; fi
-	@exit 1
+	@if [ ! -e $(evalb) ]; then echo "$(evalb) does not exist. You need to download EVALB."; exit 1; fi
 
 $(grammar).gr.grammar: $(grammar).gr
 	java -cp $(jarfile) edu.berkeley.nlp.PCFGLA.WriteGrammar -gr $(grammar).gr
