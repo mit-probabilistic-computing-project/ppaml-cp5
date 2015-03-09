@@ -1,5 +1,5 @@
 evalb=../EVALB/evalb
-evalb_param=../EVALB/sample/sample.prm
+evalb_param=../EVALB/new.prm
 jarfile=../lib/BerkeleyParser-1.7.jar
 grammar=eng_MLE
 
@@ -23,7 +23,6 @@ $(grammar).gr:
 	@exit 1
 
 evalb:
-	@if [ ! -e $(evalb) ]; then echo "$(evalb) does not exist. You need to download EVALB."; exit 1; fi
 
 $(grammar).gr.grammar: $(grammar).gr
 	java -cp $(jarfile) edu.berkeley.nlp.PCFGLA.WriteGrammar -gr $(grammar).gr
