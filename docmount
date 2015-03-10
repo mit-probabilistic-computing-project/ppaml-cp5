@@ -1,4 +1,0 @@
-
-#in order to get past the hardlink restriction, and allow for the dropbox repo to continue to be used by tom, Chad's computer has 
-
-sudo mount --bind ~/Dropbox/cp5-latent-pcfg ./doc
