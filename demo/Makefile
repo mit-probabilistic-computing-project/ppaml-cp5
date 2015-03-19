@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+SHELL=/bin/bash
 evalb=../EVALB/evalb
 evalb_param=../EVALB/new.prm
 jarfile=../lib/BerkeleyParser-1.7.jar

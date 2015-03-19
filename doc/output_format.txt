@@ -1,26 +1,76 @@
-Annotated terminals must be in the folowing format:
-<original tag>_<annotated state>
-The annotated states must be numbered from 0.
+=====================
+Grammar Output Format
+=====================
+
+This file specifies the format of text grammar files which will be produced
+by the teams. These files will be read by our evaluation system to construct a
+grammar object (.gr file) for the Berkeley Parser to parse test sentences.
+
+Format of Annotated Terminals
+-----------------------------
+
+The output PCFG with latent annotation uses annotated terminals. They will
+be used in the output files and should be consistent across files.
+Annotated terminals must be in the following format:
+
+   <original tag>_<annotated state>
+
+original tag:
+   Node labels of the provided parse trees.
+
+annotated state: 
+   Consecutive positive integers; must be numbered from 0 up to N
+   (exclusive) consecutively, where N is the total number of states of the
+   original tag.
+
 Example:
-@NP^g_4
+   @NP^g_4
+
 
 The output grammar must consist of three files with the following suffix.
 
-.grammar:
-Grammar rules (binary and unary) and their probabilities.
-<parent> -> <left child> <right child> <probability>
-Example:
-@NP^g_0 -> -LRB-_0 DT_5 2.7901577260037124E-8
+.states file
+------------
+Number of hidden states for each original tag:
 
-.lexicon:
-Probabilities of generating each word.
-<annotated tag> -> <word> <probability>
-Example:
-SYM_0 & 0.09090909090909097
+   <original tag>\t<number of states>
 
-.states:
-Number of annotated states for each tag.
-Must starts from zero and indexed by consecutive integers.
-<original tag> <number of states>
+The tag and number are separated by a tab.
+
 Example:
-S^g   23 true
+   S^g	23
+
+Note that the original tag "ROOT" should have only 1 state, i.e., no
+annotation, thus it will be written as
+   ROOT	1
+and its annotated tag in grammar rules will always be
+   ROOT_0
+
+
+.grammar file
+-------------
+Grammar rules (binary and unary) and their probabilities:
+
+   <parent> -> <left child> <right child> <probability>
+
+The tags, arrow and probability are whitespace delimited.
+
+Example:
+   @NP^g_0 -> -LRB-_0 DT_5 2.7901577260037124E-8
+
+
+.lexicon file
+-------------
+Probabilities of generating each word for a non-terminal:
+
+   <annotated tag> -> <word> <probability>
+
+The tags, arrow and probability are whitespace delimited.
+
+Example:
+   SYM_0 & 0.09090909090909097
+
+For all three files, there should be one entry per line. Each line should
+not have leading/trailing spaces and should be ended with a line
+terminator. Windows (CRLF), Unix (LF) and Mac (CR) line terminators are
+acceptable. There should not be any empty line.
