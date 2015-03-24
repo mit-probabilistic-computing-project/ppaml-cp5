@@ -1,4 +1,4 @@
-ppaml-challenge-problems
+PPAML Challenge Problem 5
 ========================
 
-This is a workspace for ppaml challenge problems. 
+This repository contains collateral (problem description and associated tools) for CP5 of [PPAML](http://ppaml.galois.com/wiki/).
