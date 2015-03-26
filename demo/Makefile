@@ -15,7 +15,7 @@ wsj_test.22.txt:
 	@echo "You need to download wsj_test.22.txt"
 	@exit 1
 
-wsj_gold_22.txt:
+wsj_gold.22.txt:
 	@echo "You need to download wsj_gold.22.txt"
 	@exit 1
 
