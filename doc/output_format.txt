@@ -27,9 +27,9 @@ Example:
    @NP^g_4
 
 
-The output grammar must consist of three files with the following suffix.
+The output grammar must consist of three files listed below.
 
-.states file
+pcfgla.states file
 ------------
 Number of hidden states for each original tag:
 
@@ -47,7 +47,7 @@ and its annotated tag in grammar rules will always be
    ROOT_0
 
 
-.grammar file
+pcfgla.grammar file
 -------------
 Grammar rules (binary and unary) and their probabilities:
 
@@ -59,7 +59,7 @@ Example:
    @NP^g_0 -> -LRB-_0 DT_5 2.7901577260037124E-8
 
 
-.lexicon file
+pcfgla.lexicon file
 -------------
 Probabilities of generating each word for a non-terminal:
 
