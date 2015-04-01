@@ -30,7 +30,7 @@ f1_file=$result/f1.txt
 
 # input files
 grammar=pcfgla
-rules=$solution/$grammar.rules
+rules=$solution/$grammar.grammar
 lexicon=$solution/$grammar.lexicon
 states=$solution/$grammar.states
 
