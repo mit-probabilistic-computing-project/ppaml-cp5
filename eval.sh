@@ -53,7 +53,7 @@ fi
 evalb=EVALB/evalb 
 evalb_param=EVALB/new.prm
 
-jarfile=lib/BerkeleyParser-1.7.jar
+jarfile=lib/BerkeleyParser-ppaml-1.8.jar
 
 # read and dump grammar object
 echo "Reading grammar ..."

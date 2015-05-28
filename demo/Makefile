@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 evalb=../EVALB/evalb
 evalb_param=../EVALB/new.prm
-jarfile=../lib/BerkeleyParser-1.7.jar
+jarfile=../lib/BerkeleyParser-ppaml-1.8.jar
 grammar=eng_MLE
 
 .SECONDARY: data/sample_test.txt data/sample_gold.txt data/sample_pred.txt $(grammar).read.gr $(grammar).gr

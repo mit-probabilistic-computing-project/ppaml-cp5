@@ -14,7 +14,7 @@ log_path=$4
 
 mkdir -p "$output_dir"
 
-jarfile=$(readlink -m lib/BerkeleyParser-1.7.jar)
+jarfile=$(readlink -m lib/BerkeleyParser-ppaml-1.8.jar)
 grammar=pcfgla
 
 
